@@ -7,7 +7,7 @@ function unpack(rows, index) {
 }
 
 
-// build a function to build promise and put data into variables
+// build a function to build promise and put data into variables with dataset "0"
 function accessJson(jsonfile) {
   d3.json(jsonfile).then((data) => {
 // Grab values from the data json object to build the plots
@@ -43,25 +43,33 @@ function accessJson(jsonfile) {
   
 }
 
+//accessJson("samples.json");
+
+
+//build a function to utilize d3 to grab json file and put data into variables, then ultimately create charts based on those data
+
 function createBarcharts(idSelector) {
   d3.json("samples.json").then((data) => {
 // Grab values from the data json object to build the plots
     var metadata = data.metadata;
     var bb_data = data;
     var sample_data = data.samples;
-    var id940 = sample_data[0].otu_ids;
-
+    //console.log(sample_data);
+    console.log(idSelector);
     ///
-    var filteredData = sample_data.filter(row => row['id'] == idSelector);
+    var filteredData = sample_data.filter(row => row.id == idSelector);
     console.log(filteredData);
-    console.log(row['id']);
-    
+   // console.log(row['id']);
+    var OTUIDs = filteredData[0].otu_ids;
+    console.log(OTUIDs);
+    var SampleValues = filteredData[0].sample_values;
+    /*
     console.log(bb_data);
     console.log(metadata);
     console.log(sample_data);
     console.log(id940);
     console.log(sample_data.length);
- 
+ */
  // build layout for the graph
     var layout = {
       title: "Top 10 OTUs Found ",
@@ -70,12 +78,23 @@ function createBarcharts(idSelector) {
     };
 
   //build data component for the graph
-
+    console.log(filteredData.sample_values);
     var data = [{
       type: 'bar',
-      x: filteredData.sample_values.slice(0, 10).reverse(),
-      y: filteredData.otu_ids.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse(),
-      orientation: 'h'}];
+      x: SampleValues.slice(0, 10).reverse(),
+      y: OTUIDs.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse(),
+      orientation: 'h',
+        options: {
+          plugins: {
+            tooltip: {
+              filter : function(tooltipItem){
+                return tooltipItem[0].otu_labels === filteredData[0].otu_labels;
+              }
+            }
+          }
+        }
+    
+    }];
 
     Plotly.newPlot('bar', data, layout)
   
@@ -93,15 +112,12 @@ function createBarcharts(idSelector) {
 
 function dropdownEventhandler() {
   // Use D3 to select the dropdown menu
-
-
   var dropdownMenu = d3.select("#selDataset");
 
   d3.json("samples.json").then((data) => { 
     var participant_names = data.names;
+    console.log(participant_names);
     participant_names.forEach((name) => {
-      var addNames =
-
       dropdownMenu
     	.append('option')
       .text(name) // text showed in the menu
@@ -109,15 +125,23 @@ function dropdownEventhandler() {
       console.log(name);
       
     });
-    createBarcharts(name);
+    var uponLoadinggraph = participant_names[0];
+    console.log(uponLoadinggraph);
+    createBarcharts(uponLoadinggraph);
   });
 }
-    
+
+function optionChanged(newVariable) {
+  console.log(newVariable);
+  createBarcharts(newVariable);
 
 
-
+}
 
 dropdownEventhandler();
+
+
+
 /*
  for (i = 0; i < sample.data.length; i++) {
     tbody.html("");    
