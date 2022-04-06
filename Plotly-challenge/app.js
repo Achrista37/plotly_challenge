@@ -52,8 +52,9 @@ function createBarcharts(idSelector) {
     var id940 = sample_data[0].otu_ids;
 
     ///
-    var filteredData = sample_data.filter(row => row[id] == idSelector);
+    var filteredData = sample_data.filter(row => row['id'] == idSelector);
     console.log(filteredData);
+    console.log(row['id']);
     
     console.log(bb_data);
     console.log(metadata);
@@ -114,16 +115,7 @@ function dropdownEventhandler() {
     
 
 
-/*
- Object.entries(filteredObject).forEach(([key, value]) => {
 
-
-    filteredData = filteredData.filter(row => row[key] === value);
-    console.log(filteredData);
-
-  });
-*/
- 
 
 dropdownEventhandler();
 /*
@@ -223,3 +215,15 @@ dropdownEventhandler();
     Plotly.newPlot("plot", data, layout);
   });
   */
+
+
+  /*
+ Object.entries(filteredObject).forEach(([key, value]) => {
+
+
+    filteredData = filteredData.filter(row => row[key] === value);
+    console.log(filteredData);
+
+  });
+*/
+ 
