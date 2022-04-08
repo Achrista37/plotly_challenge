@@ -134,16 +134,19 @@ function bubbleCharts(morebbdata) {
 var trace1 = {
   x: morebbdata[0].otu_ids,
   y: morebbdata[0].sample_values,
+  text: morebbdata[0].otu_labels,
   mode: 'markers',
   marker: {
-    size: morebbdata[0].sample_values
+    size: morebbdata[0].sample_values,
+    color: morebbdata[0].otu_ids
+     
   }
 };
 
 var data = [trace1];
 
 var layout = {
-  title: `OTU ID VS SAMPLE VALUE IN $`,
+  title: `OTU ID VS SAMPLE VALUE IN PARTICIPANT ID ${morebbdata[0].id}`,
   showlegend: false,
   height: 600,
   width: 600
